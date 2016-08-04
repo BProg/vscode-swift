@@ -6,6 +6,7 @@ Currently the extension provides rudimentary support for:
 
 - Completion lists
 - Symbol resolution
+- Configurable path for SourceKitten
 
 Future support for:
 
@@ -47,7 +48,6 @@ None yet. [FUTURE: Allow user to configure](https://github.com/RLovelett/vscode-
 
 ## Known Issues
 
-- Cannot configure path the SourceKitten
 - Does not run on Linux
 
 ## Release Notes
