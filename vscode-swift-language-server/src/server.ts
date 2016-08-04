@@ -24,8 +24,12 @@ import {
 	createCompletionItem
 } from './swiftCompletion';
 
+import {
+	showInstallMesage
+} from './swiftUI';
+
 // Create a connection for the server. The connection uses Node's IPC as a transport
-let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
+export let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
 
 // Create a simple text document manager. The text document manager
 // supports full document sync only
@@ -86,7 +90,11 @@ connection.onCompletion((textDocumentPosition: TextDocumentPositionParams): Then
 	let args = ['complete', '--text', text, '--offset', offset, "--compilerargs", "--", files];
 
 	let promise: Promise<CompletionItem[]> = new Promise((resolve, reject) => {
-		execFile(sourceKittenPath + "aa", args, (error, stdout, stderr) => {
+		execFile(sourceKittenPath, args, (error, stdout, stderr) => {
+			if (error && (<any>error).code == "ENOENT") {
+				console.error("Missing SourceKitten");
+				showInstallMesage();
+			}
 			if (error) {
 				reject(error);
 			}
@@ -154,6 +162,3 @@ connection.onDocumentSymbol((documentSymbolParams: DocumentSymbolParams): Thenab
 
 // Listen on the connection
 connection.listen();
-
-// Helpers
-
