@@ -7,7 +7,7 @@ import {
     RemoteWindow, MessageActionItem
 } from 'vscode-languageserver';
 
-export function showInstallMesage() {
+export function showInstallMessage() {
     let item = {
         title: 'Install',
     };

@@ -25,7 +25,7 @@ import {
 } from './swiftCompletion';
 
 import {
-	showInstallMesage
+	showInstallMessage
 } from './swiftUI';
 
 // Create a connection for the server. The connection uses Node's IPC as a transport
@@ -93,7 +93,7 @@ connection.onCompletion((textDocumentPosition: TextDocumentPositionParams): Then
 		execFile(sourceKittenPath, args, (error, stdout, stderr) => {
 			if (error && (<any>error).code == "ENOENT") {
 				console.error("Missing SourceKitten");
-				showInstallMesage();
+				showInstallMessage();
 			}
 			if (error) {
 				reject(error);

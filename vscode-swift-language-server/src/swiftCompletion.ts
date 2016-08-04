@@ -12,10 +12,6 @@ import {
     CompletionItemKind,
 } from 'vscode-languageserver';
 
-import {
-    sourceKittenPath
-} from './server';
-
 /**
  * Mapps a CompletionSuggestion to a CompletionItem
  *
