@@ -11,9 +11,9 @@ export function showInstallMessage() {
     let item = {
         title: 'Install',
     };
-    // FIXME: might not be able spawn across the IPC barrier?, we can send notifications though
+
     connection.window.showErrorMessage('The sourcekitten command was not found. Would you like to install it?', item).then(selection => {
-        if (selection === item) {
+        if (selection.title == item.title) {
             spawn({
                 darwin: 'open',
                 win32: 'explorer',
