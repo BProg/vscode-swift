@@ -130,21 +130,21 @@ connection.onDocumentSymbol((documentSymbolParams: DocumentSymbolParams): Thenab
 						kind: 3,
 						location: symbolLocation
 					};
-					// TODO use swift types?
+
 					switch (value['key.kind']) {
-						case 'source.lang.swift.decl.var.global':
+						case SwiftType.DeclVarGlobal:
 							symbol.kind = SymbolKind.Variable;
 							break;
-						case 'source.lang.swift.expr.call':
+						case SwiftType.Expression:
 							symbol.kind = SymbolKind.Function;
 							break;
-						case 'source.lang.swift.decl.struct':
+						case SwiftType.DeclStruct:
 							symbol.kind = SymbolKind.Class;
 							break;
-						case 'source.lang.swift.decl.protocol':
+						case SwiftType.DeclProtocol:
 							symbol.kind = SymbolKind.Interface;
 							break;
-						case 'source.lang.swift.decl.enum':
+						case SwiftType.DeclEnum:
 							symbol.kind = SymbolKind.Enum;
 							break;
 						default:
