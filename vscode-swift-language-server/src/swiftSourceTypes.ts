@@ -6,6 +6,7 @@ import { SymbolKind, CompletionItemKind,
  */
 export enum SwiftType {
 
+    Expression = <any>'source.lang.swift.expr.call',
     Keyword = <any>'source.lang.swift.keyword',
     DeclAssociatedtype = <any>'source.lang.swift.decl.associatedtype',
     DeclClass = <any>'source.lang.swift.decl.class',
