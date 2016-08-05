@@ -23,7 +23,7 @@ export function activate(context: ExtensionContext) {
             fileEvents: workspace.createFileSystemWatcher('**/*.swift', false, true, false)
         }
     }
-
+    
     let client = new LanguageClient('Swift', serverOptions, clientOptions);
 
     // Push the disposable to the context's subscriptions so that the

@@ -8,6 +8,10 @@ import {
 } from './swiftSourceTypes';
 
 import {
+	SwiftStructure
+} from './swiftSymbol'
+
+import {
 	ProjectSources
 } from './projectSources';
 
@@ -92,7 +96,6 @@ connection.onCompletion((textDocumentPosition: TextDocumentPositionParams): Then
 	let promise: Promise<CompletionItem[]> = new Promise((resolve, reject) => {
 		execFile(sourceKittenPath, args, (error, stdout, stderr) => {
 			if (error && (<any>error).code == "ENOENT") {
-				console.error("Missing SourceKitten");
 				showInstallMessage();
 			}
 			if (error) {
@@ -116,22 +119,26 @@ connection.onDocumentSymbol((documentSymbolParams: DocumentSymbolParams): Thenab
 	let document: TextDocument = documents.get(documentSymbolParams.textDocument.uri);
 	let promise: Promise<SymbolInformation[]> = new Promise((resolve, reject) => {
 		execFile(sourceKittenPath, ['structure', '--text', document.getText()], (error, stdout, stderr) => {
-			if (error) { reject(error); }
+			if (error && (<any>error).code == "ENOENT") {
+				showInstallMessage();
+			}
+			if (error) {
+				reject(error);
+			}
 			else {
-				let json: any[] = JSON.parse(stdout.toString());
-				let substructure: any[] = json['key.substructure'];
-				let symbols: SymbolInformation[] = substructure.map((value, index, array): SymbolInformation => {
-					let start: Position = document.positionAt(value['key.nameoffset']);
-					let end: Position = document.positionAt(value['key.nameoffset'] + value['key.namelength']);
+				let root = <SwiftStructure.SwiftRoot>JSON.parse(stdout.toString());
+				let symbols: SymbolInformation[] = root[SwiftStructure.KEY_SUBSTRUCTURE].map((value, index, array): SymbolInformation => {
+					let start: Position = document.positionAt(value[SwiftStructure.KEY_NAMEOFFSET]);
+					let end: Position = document.positionAt(value[SwiftStructure.KEY_NAMEOFFSET] + value[SwiftStructure.KEY_NAMELENGTH]);
 					let range: Range = Range.create(start, end);
 					let symbolLocation: Location = Location.create(documentSymbolParams.textDocument.uri, range);
 					let symbol = {
-						name: value['key.name'],
+						name: value[SwiftStructure.KEY_NAME],
 						kind: 3,
 						location: symbolLocation
 					};
 
-					switch (value['key.kind']) {
+					switch (value[SwiftStructure.KEY_KIND]) {
 						case SwiftType.DeclVarGlobal:
 							symbol.kind = SymbolKind.Variable;
 							break;
