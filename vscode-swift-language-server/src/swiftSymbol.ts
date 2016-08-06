@@ -1,7 +1,7 @@
 'use strict';
 
 import {
-    SwiftType
+  SwiftType
 } from './swiftSourceTypes';
 
 /*
@@ -45,46 +45,115 @@ parses structure data:
 }
 **/
 
-export declare module SwiftStructure {
-    // this gets improved with constant propagation;
-    // https://github.com/Microsoft/TypeScript/issues/7565
+export module SwiftStructure {
+  export const keyKind = Symbol("key.kind");
+  export const keyOffset = Symbol("key.offset");
+  export const keyNameoffset = Symbol("key.nameoffset");
+  export const keyNamelength = Symbol("key.namelength");
+  export const keyLength = Symbol("key.length");
+  export const keyAccessibility = Symbol("key.accessibility");
+  export const keyTypename = Symbol("key.typename");
+  export const keyName = Symbol("key.name");
+  export const keyBodyoffset = Symbol("key.bodyoffset");
+  export const keyBodylength = Symbol("key.bodylength");
+  export const keySubstructure = Symbol("key.substructure");
+  export const keyDiagnostic_stage = Symbol("key.diagnostic_stage");
 
-    export const KEY_KIND: "key.kind";
-    export const KEY_OFFSET: "key.offset";
-    export const KEY_NAMEOFFSET: "key.nameoffset";
-    export const KEY_NAMELENGTH: "key.namelength";
-    export const KEY_LENGTH: "key.length";
-    export const KEY_ACCESSIBILITY: "key.accessibility";
-    export const KEY_TYPENAME: "key.typename";
-    export const KEY_NAME: "key.name";
-    export const KEY_BODYOFFSET: "key.bodyoffset";
-    export const KEY_BODYLENGTH: "key.bodylength";
-    export const KEY_SUBSTRUCTURE: "key.substructure";
-    export const KEY_DIAGNOSTIC_STAGE: "key.diagnostic_stage";
 
-    export interface KeySubstructure {
-        // with https://github.com/Microsoft/TypeScript/issues/7565
-        // [SwiftStructure.KEY_KIND]: SwiftType;
-        // I think, silly USR's'
-        ["key.kind"]: SwiftType;
-        ["key.offset"]: number;
-        ["key.nameoffset"]: number;
-        ["key.namelength"]: number;
-        ["key.length"]: number;
-        ["key.accessibility"]: string;
-        ["key.typename"]: string;
-        ["key.name"]: string;
+  // this gets improved with constant propagation;
+  // https://github.com/Microsoft/TypeScript/issues/7565
+  // or optional classes properties
+  // https://github.com/Microsoft/TypeScript/pull/8625
+  // or allowing non builtin symbols for indexing keys
+  // let kind = Symbol("key.kind")
+  // [kind]: SwiftType;
 
-        ["key.bodyoffset"]: number;
-        ["key.bodylength"]: number;
-        ["key.substructure"]: KeySubstructure[];
-    }
+  /**
+   * Nodes along the AST
+   *
+   * @export
+   * @interface Substructure
+   */
+  export interface Substructure {
 
-    export interface SwiftRoot {
-        ["key.substructure"]: KeySubstructure[];
-        ["key.offset"]: number;
-        ["key.diagnostic_stage"]: string;
-        ["key.length"]: number;
-    }
+    /**
+     * @type {SwiftType}
+     */
+    ["key.kind"]: SwiftType;
+
+    /**
+     * @type {number}
+     */
+    ["key.offset"]: number;
+    /**
+     * @type {number}
+     */
+    ["key.nameoffset"]: number;
+    /**
+     * @type {number}
+     */
+    ["key.namelength"]: number;
+    /**
+     * @type {number}
+     */
+    ["key.length"]: number;
+
+    /**
+     * @type {string}
+     */
+    ["key.accessibility"]: string;
+    /**
+     * @type {string}
+     */
+    ["key.name"]: string;
+
+    // currently classes cannot contain optional properties we need that, (more recent typescript versions have it)
+    // compounding that, @decorators are not allowed in interfaces
+    // I think that is something we could use to convert "key.typename" -> typename, and not use indexing definitions
+    // to support parsing the json keys sourcekit/sourcekitten emit.
+    // FIXME: maybe there is still a better way
+    /**
+     * @type {string}
+     */
+    ["key.typename"]?: string;
+
+    /**
+     * @type {number}
+     */
+    ["key.bodyoffset"]?: number;
+    /**
+     * @type {number}
+     */
+    ["key.bodylength"]?: number;
+    /**
+     * @type {Substructure[]}
+     */
+    ["key.substructure"]?: Substructure[];
+  }
+
+  /**
+   * The root of the AST
+   *
+   * @export
+   * @interface SwiftRoot
+   */
+  export interface SwiftRoot {
+    /**
+     * @type {Substructure[]}
+     */
+    ["key.substructure"]: Substructure[];
+    /**
+     * @type {string}
+     */
+    ["key.diagnostic_stage"]: string;
+    /**
+     * @type {number}
+     */
+    ["key.offset"]: number;
+    /**
+     * @type {number}
+     */
+    ["key.length"]: number;
+  }
 
 }

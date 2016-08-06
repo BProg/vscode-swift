@@ -127,18 +127,18 @@ connection.onDocumentSymbol((documentSymbolParams: DocumentSymbolParams): Thenab
 			}
 			else {
 				let root = <SwiftStructure.SwiftRoot>JSON.parse(stdout.toString());
-				let symbols: SymbolInformation[] = root[SwiftStructure.KEY_SUBSTRUCTURE].map((value, index, array): SymbolInformation => {
-					let start: Position = document.positionAt(value[SwiftStructure.KEY_NAMEOFFSET]);
-					let end: Position = document.positionAt(value[SwiftStructure.KEY_NAMEOFFSET] + value[SwiftStructure.KEY_NAMELENGTH]);
+				let symbols: SymbolInformation[] = root[SwiftStructure.keySubstructure].map((value, index, array): SymbolInformation => {
+					let start: Position = document.positionAt(value[SwiftStructure.keyNameoffset]);
+					let end: Position = document.positionAt(value[SwiftStructure.keyNameoffset] + value[SwiftStructure.keyNamelength]);
 					let range: Range = Range.create(start, end);
 					let symbolLocation: Location = Location.create(documentSymbolParams.textDocument.uri, range);
 					let symbol = {
-						name: value[SwiftStructure.KEY_NAME],
+						name: value[SwiftStructure.keyName],
 						kind: 3,
 						location: symbolLocation
 					};
 
-					switch (value[SwiftStructure.KEY_KIND]) {
+					switch (value[SwiftStructure.keyKind]) {
 						case SwiftType.DeclVarGlobal:
 							symbol.kind = SymbolKind.Variable;
 							break;
