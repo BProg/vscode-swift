@@ -2,6 +2,7 @@
     "name": "vscode-swift-language-server",
     "description": "An IPC server that talks with SourceKitten to provide code intelligence for Swift.",
     "version": "0.0.1",
+    "license": "SEE LICENSE IN LICENSE",
     "author": {
         "name": "Ryan Lovelett",
         "email": "ryan@lovelett.me",
@@ -10,8 +11,10 @@
     "engines": {
         "node": "*"
     },
+    "repository": "RLovelett/vscode-swift",
     "dependencies": {
-        "vscode-languageserver": "^2.2.1"
+        "vscode-languageserver": "^2.2.1",
+        "js-yaml": "^3.6.0"
     },
     "devDependencies": {
         "typescript": "^1.8.10",

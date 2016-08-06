@@ -1,3 +1,5 @@
+'use strict';
+
 import * as fs from 'fs';
 import * as Path from 'path';
 import { TextDocument } from 'vscode-languageserver';

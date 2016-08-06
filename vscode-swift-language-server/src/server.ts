@@ -9,7 +9,7 @@ import {
 
 import {
 	ProjectSources
-} from './projectSources';
+} from './swiftProjectSources';
 
 import {
 	IConnection, IPCMessageReader, IPCMessageWriter, createConnection,
@@ -37,15 +37,16 @@ documents.listen(connection);
 
 
 // configuration syncing from client
-interface Settings {
-	swift: SwiftLanguageServerSettings;
-}
 
 interface SwiftLanguageServerSettings {
 	sourceKittenPath: string;
 }
 
+interface Settings {
+	swift: SwiftLanguageServerSettings;
+}
 let sourceKittenPath: string;
+
 connection.onDidChangeConfiguration((change: DidChangeConfigurationParams) => {
 	let settings = <Settings>change.settings;
 	sourceKittenPath = settings.swift.sourceKittenPath;

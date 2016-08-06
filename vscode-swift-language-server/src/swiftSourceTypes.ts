@@ -1,4 +1,7 @@
-import { SymbolKind, CompletionItemKind,
+'use strict';
+
+import {
+    SymbolKind, CompletionItemKind,
 } from 'vscode-languageserver';
 
 /**

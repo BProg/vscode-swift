@@ -1,3 +1,5 @@
+'use strict';
+
 import {
     IConnection,
     TextDocument,
@@ -9,7 +11,10 @@ import {
     swiftSourcesIn,
     stat,
     convertFileToTextDocument
-} from './sourceSwiftInProject';
+} from './swiftSourceInProject';
+
+import 'js-yaml';
+//TODO swiftpm outputs yaml with a list of all sources recurse for all modules.
 
 const uriPrefix = 'file://';
 
