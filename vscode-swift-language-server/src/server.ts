@@ -202,6 +202,11 @@ connection.onDocumentSymbol((documentSymbolParams: DocumentSymbolParams): Thenab
 	return promise;
 });
 
+// inline errors
+// 	* handled by {configured tasks} API
+//  * we can provide fixmes via the {code action} API
+
+
 // Listen on the connection
 connection.listen();
 

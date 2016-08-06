@@ -10,6 +10,7 @@ and [SourceKitten](https://github.com/jpsim/SourceKitten).
 ## Development setup
 - run npm install inside the `vscode-swift-language` and `vscode-swift-language-server` folders
 - open VS Code on `vscode-swift-language` and `vscode-swift-language-server`
+- we use `typings` to find type definitions for typescript interfaces to. `npm install typings -g`
 
 ## Developing the server
 - open VS Code on `vscode-swift-language-server`
@@ -19,3 +20,14 @@ and [SourceKitten](https://github.com/jpsim/SourceKitten).
 ## Developing the extension/client
 - open VS Code on `vscode-swift-language`
 - run F5 to build and debug the extension
+
+## Adding a new npm module
+1. Add your `foo` module  extension project or the server project `package.json` as needed
+2. `npm install`
+3. Run the appropriate `typings` command to provide appropriate typescript API see [Typings](https://github.com/typings/typings)  
+4. In your source file:
+
+        "use strict";
+        import "foo";
+        foo.//completion
+      
