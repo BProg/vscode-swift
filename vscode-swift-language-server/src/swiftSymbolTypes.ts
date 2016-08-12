@@ -4,6 +4,12 @@ import {
   SwiftType
 } from './swiftSourceTypes';
 
+import {
+  SymbolInformation, SymbolKind, Location
+} from 'vscode-languageserver';
+
+// TODO: BEGIN Candidate for structure responses from node-sourcekit
+
 /*
 parses structure data:
 
@@ -45,7 +51,7 @@ parses structure data:
 }
 **/
 
-export module SwiftStructure {
+export namespace SwiftStructure {
   export const keyKind = Symbol("key.kind");
   export const keyOffset = Symbol("key.offset");
   export const keyNameoffset = Symbol("key.nameoffset");
@@ -155,5 +161,50 @@ export module SwiftStructure {
      */
     ["key.length"]: number;
   }
+}
+// TODO: END
 
+/**
+ * Maps Substructure to a SymbolKind
+ *
+ * @export
+ * @param {SwiftStructure.Substructure} subtree
+ * @param {Location} location
+ * @returns {SymbolInformation}
+ */
+export function createSymbolInformation(subtree: SwiftStructure.Substructure, location: Location): SymbolInformation {
+  let symbol: SymbolInformation = {
+    name: subtree[SwiftStructure.keyName],
+    kind: SymbolKind.Package,
+    location: location
+  };
+
+  switch (subtree[SwiftStructure.keyKind]) {
+    case SwiftType.DeclVarGlobal:
+      symbol.kind = SymbolKind.Variable;
+      break;
+    case SwiftType.Expression:
+      symbol.kind = SymbolKind.Function;
+      break;
+    case SwiftType.DeclClass:
+    case SwiftType.DeclStruct:
+      symbol.kind = SymbolKind.Class;
+      break;
+    case SwiftType.DeclEnum:
+    case SwiftType.DeclEnumelement:
+      symbol.kind = SymbolKind.Enum;
+      break;
+    case SwiftType.DeclProtocol:
+      symbol.kind = SymbolKind.Interface;
+      break;
+    case SwiftType.DeclModule:
+      symbol.kind = SymbolKind.Module;
+      break;
+    case SwiftType.DeclFunctionConstructor:
+      symbol.kind = SymbolKind.Constructor;
+      break;
+    default:
+      break;
+  }
+  return symbol;
 }

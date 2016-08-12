@@ -1,6 +1,8 @@
 import { SymbolKind, CompletionItemKind,
 } from 'vscode-languageserver';
 
+// TODO: Candidate for responses from node-sourcekit
+
 /**
  *  Bindings for SourceKit type definitions
  */
@@ -137,7 +139,6 @@ export namespace SwiftType {
             case SwiftType.DeclProtocol:
             case SwiftType.DeclTypealias:
                 return SymbolKind.Interface;
-
             // no super applicable types for these:
             case SwiftType.Keyword:
             case SwiftType.SyntaxtypeKeyword:
@@ -229,7 +230,6 @@ export namespace SwiftType {
                 return CompletionItemKind.Value;
             default:
                 console.log("un registered type" + swiftType);
-
         };
         return CompletionItemKind.Variable;
     };

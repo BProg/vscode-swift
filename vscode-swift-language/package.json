@@ -27,7 +27,7 @@
         }
     ],
     "engines": {
-        "vscode": "^1.0.0"
+        "vscode": "^1.4.0"
     },
     "categories": [
         "Languages"

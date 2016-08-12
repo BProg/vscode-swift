@@ -8,12 +8,13 @@ import {
 } from './swiftSourceTypes';
 
 import {
-	SwiftStructure
-} from './swiftSymbol'
+	SwiftStructure,
+	createSymbolInformation
+} from './swiftSymbolTypes'
 
 import {
 	ProjectSources
-} from './projectSources';
+} from './swiftFilesInProject.ts';
 
 import {
 	IConnection, IPCMessageReader, IPCMessageWriter, createConnection,
@@ -30,7 +31,7 @@ import {
 
 import {
 	showInstallMessage
-} from './swiftUI';
+} from './swiftExtensionUI';
 
 // Create a connection for the server. The connection uses Node's IPC as a transport
 export let connection: IConnection = createConnection(new IPCMessageReader(process), new IPCMessageWriter(process));
@@ -95,7 +96,7 @@ connection.onCompletion((textDocumentPosition: TextDocumentPositionParams): Then
 
 	let promise: Promise<CompletionItem[]> = new Promise((resolve, reject) => {
 		execFile(sourceKittenPath, args, (error, stdout, stderr) => {
-			if (error && (<any>error).code == "ENOENT") {
+			if (error && (<any>error).code === "ENOENT") {
 				showInstallMessage();
 			}
 			if (error) {
@@ -119,7 +120,7 @@ connection.onDocumentSymbol((documentSymbolParams: DocumentSymbolParams): Thenab
 	let document: TextDocument = documents.get(documentSymbolParams.textDocument.uri);
 	let promise: Promise<SymbolInformation[]> = new Promise((resolve, reject) => {
 		execFile(sourceKittenPath, ['structure', '--text', document.getText()], (error, stdout, stderr) => {
-			if (error && (<any>error).code == "ENOENT") {
+			if (error && (<any>error).code === "ENOENT") {
 				showInstallMessage();
 			}
 			if (error) {
@@ -127,38 +128,13 @@ connection.onDocumentSymbol((documentSymbolParams: DocumentSymbolParams): Thenab
 			}
 			else {
 				let root = <SwiftStructure.SwiftRoot>JSON.parse(stdout.toString());
+				// does this need to be recursive?
 				let symbols: SymbolInformation[] = root[SwiftStructure.keySubstructure].map((value, index, array): SymbolInformation => {
 					let start: Position = document.positionAt(value[SwiftStructure.keyNameoffset]);
 					let end: Position = document.positionAt(value[SwiftStructure.keyNameoffset] + value[SwiftStructure.keyNamelength]);
 					let range: Range = Range.create(start, end);
 					let symbolLocation: Location = Location.create(documentSymbolParams.textDocument.uri, range);
-					let symbol = {
-						name: value[SwiftStructure.keyName],
-						kind: 3,
-						location: symbolLocation
-					};
-
-					switch (value[SwiftStructure.keyKind]) {
-						case SwiftType.DeclVarGlobal:
-							symbol.kind = SymbolKind.Variable;
-							break;
-						case SwiftType.Expression:
-							symbol.kind = SymbolKind.Function;
-							break;
-						case SwiftType.DeclStruct:
-							symbol.kind = SymbolKind.Class;
-							break;
-						case SwiftType.DeclProtocol:
-							symbol.kind = SymbolKind.Interface;
-							break;
-						case SwiftType.DeclEnum:
-							symbol.kind = SymbolKind.Enum;
-							break;
-						default:
-							connection.console.log(`Unmatched Symbol: ${value['key.kind']}`);
-							break;
-					}
-					return symbol;
+					return createSymbolInformation(value, symbolLocation);
 				});
 				resolve(symbols);
 			}

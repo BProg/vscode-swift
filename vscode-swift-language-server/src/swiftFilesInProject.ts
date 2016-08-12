@@ -9,7 +9,7 @@ import {
     swiftSourcesIn,
     stat,
     convertFileToTextDocument
-} from './sourceSwiftInProject';
+} from './swiftSourceFileUtil';
 
 const uriPrefix = 'file://';
 

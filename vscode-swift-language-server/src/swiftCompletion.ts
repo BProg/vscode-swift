@@ -72,7 +72,7 @@ export function createCompletionItem(suggestion: SwiftCompletionSuggestion, inde
             item.kind = CompletionItemKind.Reference;
             break;
     }
-    if (snippet.length != suggestion.sourcetext.length) {
+    if (snippet.length !== suggestion.sourcetext.length) {
         item.insertText = snippet;
     }
     return item;
